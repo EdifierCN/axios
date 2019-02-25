@@ -870,11 +870,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (typeof process !== 'undefined' && Object.prototype.toString.call(process) === '[object process]') {
 	    // For node use HTTP adapter
 	    adapter = __webpack_require__(13);
+	  } else if (typeof uni !== 'undefined') {
+	    // For uni-app use UHR adapter
+	    adapter = __webpack_require__(20);
 	  } else if (typeof XMLHttpRequest !== 'undefined') {
 	    // For browsers use XHR adapter
 	    adapter = __webpack_require__(13);
-	  }else if (uni && 'request' in uni){
-	    adapter = __webpack_require__(20);
 	  }
 	  return adapter;
 	}
@@ -1450,7 +1451,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	var settle = __webpack_require__(14);
 	var buildURL = __webpack_require__(6);
 	var createError = __webpack_require__(15);
 	
@@ -1458,11 +1458,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	* uni-app request adapter
 	* */
 	module.exports = function uhrAdapter(config){
-	  return new Promise(function dispatchUniRequest(resole, reject){
-	    var requestData = config.data;
-	    var requestHeaders = config.headers;
-	
-	    var { dataType, responseType } = requestHeaders;
+	  return new Promise(function dispatchUniRequest(resolve, reject){
+	    var requestData = config.data,
+	        requestHeaders = config.headers,
+	        { dataType, responseType } = requestHeaders;
 	
 	    // 发起请求
 	    var request = uni.request({
@@ -1485,7 +1484,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	              config,
 	              request
 	            };
-	            resolve(response)
+	            resolve(response);
 	            break;
 	          case 'request:fail':
 	            response = {
@@ -1537,7 +1536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 	
 	  })
-	}
+	};
 
 
 /***/ }),
